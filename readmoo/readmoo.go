@@ -1,4 +1,4 @@
-package main
+package readmoo
 
 import (
 	"bufio"
@@ -117,7 +117,7 @@ func (r *Readmoo) sendRequest(url string) string {
 	return body
 }
 
-func (r *Readmoo) getReadingsTotalCount() int {
+func (r *Readmoo) GetReadingsTotalCount() int {
 	url := r.ApiBase + "/me/readings/?page[count]=0"
 
 	body := r.sendRequest(url)
@@ -127,8 +127,8 @@ func (r *Readmoo) getReadingsTotalCount() int {
 	return resp.Meta.TotalCount
 }
 
-func (r *Readmoo) getReadings() (readings []Reading) {
-	totalCount := r.getReadingsTotalCount()
+func (r *Readmoo) GetReadings() (readings []Reading) {
+	totalCount := r.GetReadingsTotalCount()
 
 	apiEntry := r.ApiBase + "/me/readings/"
 	pageCount := 5
@@ -161,7 +161,7 @@ func (r *Readmoo) getReadings() (readings []Reading) {
 	return readings
 }
 
-func (r *Readmoo) getHighlightTotalCount(readingId string) int {
+func (r *Readmoo) GetHighlightTotalCount(readingId string) int {
 	url := r.ApiBase + "/me/readings/" + readingId + "/highlights?page[count]=0"
 
 	body := r.sendRequest(url)
@@ -170,8 +170,8 @@ func (r *Readmoo) getHighlightTotalCount(readingId string) int {
 	return highlightResp.Meta.TotalCount
 }
 
-func (r *Readmoo) getHighlights(readingId string) (highlights []string) {
-	totalCount := r.getHighlightTotalCount(readingId)
+func (r *Readmoo) GetHighlights(readingId string) (highlights []string) {
+	totalCount := r.GetHighlightTotalCount(readingId)
 
 	apiEntry := r.ApiBase + "/me/readings/" + readingId + "/highlights"
 	pageCount := 10
