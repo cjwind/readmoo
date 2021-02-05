@@ -90,6 +90,14 @@ type Readmoo struct {
 	apiToken string
 }
 
+func (r *Readmoo) New(token string) *Readmoo {
+	return &Readmoo{
+		client:   http.Client{},
+		apiBase:  "https://api.readmoo.com/store/v3",
+		apiToken: token,
+	}
+}
+
 func (r *Readmoo) sendRequest(url string) string {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
