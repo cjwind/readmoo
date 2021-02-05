@@ -7,6 +7,8 @@ Able to get:
 * Readings
 * Higlights of reading
 
+You need to get your bearer token first.
+
 ## Usage sample
 
 ```go
@@ -18,7 +20,7 @@ import (
 )
 
 func main() {
-	r := readmoo.NewReadmoo("")
+	r := readmoo.NewReadmoo("YOUR TOKEN")
 
 	readings := r.GetReadings()
 	for _, reading := range readings {
