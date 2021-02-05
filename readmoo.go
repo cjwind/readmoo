@@ -86,8 +86,8 @@ type Reading struct {
 
 type Readmoo struct {
 	client   http.Client
-	apiBase  string
-	apiToken string
+	ApiBase  string
+	ApiToken string
 }
 
 func (r *Readmoo) sendRequest(url string) string {
@@ -96,7 +96,7 @@ func (r *Readmoo) sendRequest(url string) string {
 		log.Fatalln(err)
 	}
 
-	req.Header.Add("Authorization", "Bearer "+r.apiToken)
+	req.Header.Add("Authorization", "Bearer "+r.ApiToken)
 	req.Header.Add("Content-Type", "application/vnd.api+json")
 	resp, err := r.client.Do(req)
 	if err != nil {
@@ -118,7 +118,7 @@ func (r *Readmoo) sendRequest(url string) string {
 }
 
 func (r *Readmoo) getReadingsTotalCount() int {
-	url := r.apiBase + "/me/readings/?page[count]=0"
+	url := r.ApiBase + "/me/readings/?page[count]=0"
 
 	body := r.sendRequest(url)
 	resp := ReadingResp{}
@@ -130,7 +130,7 @@ func (r *Readmoo) getReadingsTotalCount() int {
 func (r *Readmoo) getReadings() (readings []Reading) {
 	totalCount := r.getReadingsTotalCount()
 
-	apiEntry := r.apiBase + "/me/readings/"
+	apiEntry := r.ApiBase + "/me/readings/"
 	pageCount := 5
 	var url string
 
@@ -162,7 +162,7 @@ func (r *Readmoo) getReadings() (readings []Reading) {
 }
 
 func (r *Readmoo) getHighlightTotalCount(readingId string) int {
-	url := r.apiBase + "/me/readings/" + readingId + "/highlights?page[count]=0"
+	url := r.ApiBase + "/me/readings/" + readingId + "/highlights?page[count]=0"
 
 	body := r.sendRequest(url)
 	highlightResp := HighlightResp{}
@@ -173,7 +173,7 @@ func (r *Readmoo) getHighlightTotalCount(readingId string) int {
 func (r *Readmoo) getHighlights(readingId string) (highlights []string) {
 	totalCount := r.getHighlightTotalCount(readingId)
 
-	apiEntry := r.apiBase + "/me/readings/" + readingId + "/highlights"
+	apiEntry := r.ApiBase + "/me/readings/" + readingId + "/highlights"
 	pageCount := 10
 	var url string
 

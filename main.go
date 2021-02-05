@@ -6,8 +6,8 @@ import (
 
 func main() {
 	var readmoo Readmoo
-	readmoo.apiBase = "https://api.readmoo.com/store/v3"
-	readmoo.apiToken = ""
+	readmoo.ApiBase = "https://api.readmoo.com/store/v3"
+	readmoo.ApiToken = ""
 
 	readings := readmoo.getReadings()
 	for _, reading := range readings {
