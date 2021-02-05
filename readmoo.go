@@ -90,7 +90,7 @@ type Readmoo struct {
 	apiToken string
 }
 
-func (r *Readmoo) New(token string) *Readmoo {
+func NewReadmoo(token string) *Readmoo {
 	return &Readmoo{
 		client:   http.Client{},
 		apiBase:  "https://api.readmoo.com/store/v3",
