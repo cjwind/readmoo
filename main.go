@@ -5,9 +5,10 @@ import (
 )
 
 func main() {
-	var readmoo Readmoo
-	readmoo.ApiBase = "https://api.readmoo.com/store/v3"
-	readmoo.ApiToken = ""
+	readmoo := Readmoo{
+		ApiBase:  "https://api.readmoo.com/store/v3",
+		ApiToken: "",
+	}
 
 	readings := readmoo.getReadings()
 	for _, reading := range readings {
