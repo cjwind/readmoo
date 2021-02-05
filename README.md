@@ -34,5 +34,5 @@ func main() {
 
 ## TODO
 
-- [ ] refine error response handling
-- [ ] convenient way to get bearer token?
+- refine error response handling
+- convenient way to get bearer token?
