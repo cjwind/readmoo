@@ -3,6 +3,7 @@ package readmoo
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -98,7 +99,7 @@ func NewReadmoo(token string) *Readmoo {
 	}
 }
 
-func (r *Readmoo) sendRequest(url string) string {
+func (r *Readmoo) sendRequest(url string) (string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -113,22 +114,22 @@ func (r *Readmoo) sendRequest(url string) string {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Fatalf("Got status %d", resp.StatusCode)
+		msg := fmt.Sprintf("Got status %d", resp.StatusCode)
+		err := errors.New(msg)
+		return "", err
 	}
-	// TODO handle other status code
-	// TODO return error?
 
 	scanner := bufio.NewScanner(resp.Body)
 	scanner.Scan()
 	body := scanner.Text()
 
-	return body
+	return body, nil
 }
 
 func (r *Readmoo) GetReadingsTotalCount() int {
 	url := r.apiBase + "/me/readings/?page[count]=0"
 
-	body := r.sendRequest(url)
+	body, _ := r.sendRequest(url)
 	resp := ReadingResp{}
 	_ = json.Unmarshal([]byte(body), &resp)
 
@@ -145,7 +146,7 @@ func (r *Readmoo) GetReadings() (readings []Reading) {
 	for offset := 0; offset <= totalCount; offset += pageCount {
 		url = fmt.Sprintf("%s?page[count]=%d&page[offset]=%d", apiEntry, pageCount, offset)
 
-		body := r.sendRequest(url)
+		body, _ := r.sendRequest(url)
 		resp := ReadingResp{}
 		_ = json.Unmarshal([]byte(body), &resp)
 
@@ -172,7 +173,7 @@ func (r *Readmoo) GetReadings() (readings []Reading) {
 func (r *Readmoo) GetHighlightTotalCount(readingId string) int {
 	url := r.apiBase + "/me/readings/" + readingId + "/highlights?page[count]=0"
 
-	body := r.sendRequest(url)
+	body, _ := r.sendRequest(url)
 	highlightResp := HighlightResp{}
 	_ = json.Unmarshal([]byte(body), &highlightResp)
 	return highlightResp.Meta.TotalCount
@@ -188,7 +189,7 @@ func (r *Readmoo) GetHighlights(readingId string) (highlights []string) {
 	for offset := 0; offset <= totalCount; offset += pageCount {
 		url = fmt.Sprintf("%s?page[count]=%d&page[offset]=%d", apiEntry, pageCount, offset)
 
-		body := r.sendRequest(url)
+		body, _ := r.sendRequest(url)
 		highlightResp := HighlightResp{}
 		_ = json.Unmarshal([]byte(body), &highlightResp)
 
