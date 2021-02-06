@@ -179,17 +179,26 @@ func (r *Readmoo) GetReadings() (readings []Reading, err error) {
 	return readings, err
 }
 
-func (r *Readmoo) GetHighlightTotalCount(readingId string) int {
+func (r *Readmoo) GetHighlightTotalCount(readingId string) (int, error) {
 	url := r.apiBase + "/me/readings/" + readingId + "/highlights?page[count]=0"
 
-	body, _ := r.sendRequest(url)
+	body, err := r.sendRequest(url)
+
+	if err != nil {
+		return 0, err
+	}
+
 	highlightResp := HighlightResp{}
 	_ = json.Unmarshal([]byte(body), &highlightResp)
-	return highlightResp.Meta.TotalCount
+	return highlightResp.Meta.TotalCount, nil
 }
 
-func (r *Readmoo) GetHighlights(readingId string) (highlights []string) {
-	totalCount := r.GetHighlightTotalCount(readingId)
+func (r *Readmoo) GetHighlights(readingId string) (highlights []string, err error) {
+	totalCount, err := r.GetHighlightTotalCount(readingId)
+
+	if err != nil {
+		return []string{}, err
+	}
 
 	apiEntry := r.apiBase + "/me/readings/" + readingId + "/highlights"
 	pageCount := 10
@@ -198,7 +207,12 @@ func (r *Readmoo) GetHighlights(readingId string) (highlights []string) {
 	for offset := 0; offset <= totalCount; offset += pageCount {
 		url = fmt.Sprintf("%s?page[count]=%d&page[offset]=%d", apiEntry, pageCount, offset)
 
-		body, _ := r.sendRequest(url)
+		body, err := r.sendRequest(url)
+
+		if err != nil {
+			return []string{}, err
+		}
+
 		highlightResp := HighlightResp{}
 		_ = json.Unmarshal([]byte(body), &highlightResp)
 
@@ -214,5 +228,5 @@ func (r *Readmoo) GetHighlights(readingId string) (highlights []string) {
 		}
 	}
 
-	return highlights
+	return highlights, err
 }
