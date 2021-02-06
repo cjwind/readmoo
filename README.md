@@ -17,15 +17,26 @@ package main
 import (
 	"fmt"
 	"github.com/cjwind/readmoo"
+	"log"
 )
 
 func main() {
 	r := readmoo.NewReadmoo("YOUR TOKEN")
 
-	readings := r.GetReadings()
+	readings, err := r.GetReadings()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	for _, reading := range readings {
 		if reading.State == "finished" {
-			highlights := r.GetHighlights(reading.Id)
+			highlights, err := r.GetHighlights(reading.Id)
+
+			if err != nil {
+				log.Fatalln(err)
+			}
+
 			fmt.Println(highlights)
 		}
 	}
