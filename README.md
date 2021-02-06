@@ -43,6 +43,13 @@ func main() {
 }
 ```
 
+## API
+
+* `GetReadingsTotalCount()`
+* `GetReadings()`
+* `GetHighlightTotalCount()`
+* `GetHighlights()`
+
 ## TODO
 
 - convenient way to get bearer token?
