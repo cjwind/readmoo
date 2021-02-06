@@ -5,7 +5,7 @@ Unofficial API
 Able to get:
 
 * Readings
-* Higlights of reading
+* Highlights of reading
 
 You need to get your bearer token first.
 
